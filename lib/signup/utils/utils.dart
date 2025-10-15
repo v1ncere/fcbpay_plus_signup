@@ -1,3 +1,4 @@
+export 'bridge.dart';
 export 'color_string.dart';
 export 'date_utils.dart';
 export 'fix_latin_encoding.dart';

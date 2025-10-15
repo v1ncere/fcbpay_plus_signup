@@ -46,6 +46,7 @@ dependencies:
   shimmer: ^3.0.0
   flutter_typeahead: ^5.2.0
   web: ^1.1.1
+  js_interop_utils: ^1.0.8
 
 dev_dependencies:
   flutter_test:

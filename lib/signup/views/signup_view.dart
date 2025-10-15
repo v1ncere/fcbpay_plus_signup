@@ -5,8 +5,23 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../signup.dart';
 import '../widgets/widgets.dart';
 
-class SignupView extends StatelessWidget {
+class SignupView extends StatefulWidget {
   const SignupView({super.key});
+  
+  @override
+  State<SignupView> createState() => SignupViewState();
+}
+
+class SignupViewState extends State<SignupView> {
+
+  @override
+  void initState() {
+    super.initState();
+    
+    registerHostListener((payload) {
+      context.read<SignupBloc>().add(HostResponseReceived(payload));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +41,7 @@ class SignupView extends StatelessWidget {
               FullNameView(),
               SizedBox(height: 15),
               AddressView(),
-              SizedBox(height: 10),
+              SizedBox(height: 15),
               PasswordView(),
               SizedBox(height: 30),
               BottomButton(),

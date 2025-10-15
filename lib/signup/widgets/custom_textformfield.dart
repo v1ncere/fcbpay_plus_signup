@@ -57,8 +57,10 @@ class CustomTextformfield extends StatelessWidget {
       style: TextStyle(
         color: ColorString.jewel,
         fontWeight: FontWeight.w500,
+        height: 1.5,
       ),
       decoration: InputDecoration(
+        isDense: true,
         labelText: labelText,
         labelStyle: TextStyle(
           color: Colors.black45

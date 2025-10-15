@@ -61,7 +61,7 @@ class PhAddress extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 10),
+                SizedBox(height: 15),
                 Text(
                   'Permanent Address',
                   style: TextStyle(

@@ -10,7 +10,6 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 import '../signup.dart';
-import '../utils/bridge.dart';
 
 part 'signup_event.dart';
 part 'signup_state.dart';
@@ -21,9 +20,6 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     zipCodeController: TextEditingController(),
     zipCodePermanentController: TextEditingController(),
   )) {
-    registerHostListener((payload) {
-      add(HostResponseReceived(payload));
-    });
     // textfield clear
     on<LastNameCleared>(_onLastNameCleared);
     on<FirstNameCleared>(_onFirstNameCleared);
@@ -230,7 +226,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     emit(state.copyWith(countryStatus: Status.loading));
     
     try {
-      final url = Uri.https(dotenv.get('COUNTRIES_HOST'), '/countries');
+      final url = Uri.https(dotenv.get('COUNTRIES_HOST'), '/default/flutterNationalityCorsEnable');
       final response = await http.get(url);
       
       if (response.statusCode == 200) {
@@ -443,51 +439,58 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   void _onHostResponseReceived(HostResponseReceived event, Emitter<SignupState> emit) {
     // Host responded (maybe success or error). Update state accordingly.
     final response = event.response;
-    final ok = response['status'] == 'ok' || response['result'] != null;
+    final isSuccess = response['success'] == true || response['status'] == 'ok';
+    final message = event.response['message'] ?? 'No message';
     
-    emit(state.copyWith(status: ok ? Status.success : Status.failure, hostResponse: response));
+    emit(state.copyWith(
+      bridgeStatus: isSuccess 
+      ? Status.success 
+      : Status.failure,
+      hostResponse: message
+    ));
   }
 
   void _onSignupSubmitted(SignupSubmitted event, Emitter<SignupState> emit) {
     if (state.isNotValid) {
       emit(state.copyWith(status: Status.failure, message: TextString.error));
+      emit(state.copyWith(status: Status.initial));
       return;
     }
 
     emit(state.copyWith(status: Status.loading));
 
     final payload = {
-      'action': 'createSignup',
+      'type': 'signup_request',
       'data': {
-        'lastName': state.lastName,
-        'firstName': state.firstName,
-        'middleName': state.middleName,
-        'suffixName': state.suffixName,
-        'gender': state.gender,
-        'nationality': state.nationality,
-        'birthAddress': state.birthAddress,
-        'province': state.province,
-        'cityMunicipality': state.cityMunicipality,
-        'barangay': state.barangay,
-        'zipCode': state.zipCode,
-        'provincePermanent': state.provincePermanent,
-        'cityMunicipalityPermanent': state.cityMunicipalityPermanent,
-        'barangayPermanent': state.barangayPermanent,
-        'zipCodePermanent': state.zipCodePermanent,
-        'foreignPresentAddress': state.foreignPresentAddress,
-        'foreignPermanentAddress': state.foreignPermanentAddress,
-        'password': state.password,
-        'confirmPassword': state.confirmPassword, 
+        'lastName': state.lastName.value,
+        'firstName': state.firstName.value,
+        'middleName': state.middleName.value,
+        'suffixName': state.suffixName.value,
+        'gender': state.gender.value,
+        'nationality': state.nationality.value,
+        'birthAddress': state.birthAddress.value,
+        'province': state.province.value,
+        'cityMunicipality': state.cityMunicipality.value,
+        'barangay': state.barangay.value,
+        'zipCode': state.zipCode.value,
+        'provincePermanent': state.provincePermanent.value,
+        'cityMunicipalityPermanent': state.cityMunicipalityPermanent.value,
+        'barangayPermanent': state.barangayPermanent.value,
+        'zipCodePermanent': state.zipCodePermanent.value,
+        'foreignPresentAddress': state.foreignPresentAddress.value,
+        'foreignPermanentAddress': state.foreignPermanentAddress.value,
+        'password': state.password.value,
+        'confirmPassword': state.confirmPassword.value, 
       } 
     };
     
     try {
       sendToHost(payload);
-      // Now we wait for host response via HostResponseReceived event.
-      // We don't block here; host will call window.onSignupSaved -> registerHostListener -> add(HostResponseReceived)
     } catch (e) {
       emit(state.copyWith(status: Status.failure, message: e.toString()));
+      emit(state.copyWith(status: Status.initial));
     }
+    emit(state.copyWith(status: Status.initial));
   }
 
   @override

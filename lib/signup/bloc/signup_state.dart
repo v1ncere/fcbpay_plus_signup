@@ -58,6 +58,7 @@ class SignupState extends Equatable with FormzMixin {
   final Status cityMunicipalityPermanentStatus;
   final Status barangayPermanentStatus;
   final Status zipCodePermanentStatus;
+  final Status bridgeStatus;
   final Status status;
   
   const SignupState({
@@ -106,7 +107,7 @@ class SignupState extends Equatable with FormzMixin {
     // informational
     this.progress = 0,
     this.message = "",
-    // statuses
+    // status
     this.birthAddressStatus = Status.initial,
     this.countryStatus = Status.initial,
     this.provinceStatus = Status.initial,
@@ -116,8 +117,32 @@ class SignupState extends Equatable with FormzMixin {
     this.cityMunicipalityPermanentStatus = Status.initial,
     this.barangayPermanentStatus = Status.initial,
     this.zipCodePermanentStatus = Status.initial,
+    this.bridgeStatus = Status.initial,
     this.status = Status.initial,
   });
+
+  @override
+  List<FormzInput> get inputs => [
+    lastName,
+    firstName,
+    middleName,
+    suffixName,
+    gender,
+    nationality,
+    birthAddress,
+    if (nationality.value != 'Filipino') foreignPresentAddress,
+    if (nationality.value != 'Filipino' && !isSameAddress) foreignPresentAddress,
+    if (nationality.value == 'Filipino') province,
+    if (nationality.value == 'Filipino') cityMunicipality,
+    if (nationality.value == 'Filipino') barangay,
+    if (nationality.value == 'Filipino') zipCode,
+    if (nationality.value == 'Filipino' && !isSameAddress) provincePermanent,
+    if (nationality.value == 'Filipino' && !isSameAddress) cityMunicipalityPermanent,
+    if (nationality.value == 'Filipino' && !isSameAddress) barangayPermanent,
+    if (nationality.value == 'Filipino' && !isSameAddress) zipCodePermanent,
+    password,
+    confirmPassword,
+  ];
 
   SignupState copyWith({
     TextEditingController? birthdDateController,
@@ -163,6 +188,7 @@ class SignupState extends Equatable with FormzMixin {
     Status? cityMunicipalityPermanentStatus,
     Status? barangayPermanentStatus,
     Status? zipCodePermanentStatus,
+    Status? bridgeStatus,
     Status? status,
   }) {
     return SignupState(
@@ -209,6 +235,7 @@ class SignupState extends Equatable with FormzMixin {
       cityMunicipalityPermanentStatus: cityMunicipalityPermanentStatus ?? this.cityMunicipalityPermanentStatus,
       barangayPermanentStatus: barangayPermanentStatus ?? this.barangayPermanentStatus,
       zipCodePermanentStatus: zipCodePermanentStatus ?? this.zipCodePermanentStatus,
+      bridgeStatus: bridgeStatus ?? this.bridgeStatus,
       status: status ?? this.status,
     );
   }
@@ -259,31 +286,8 @@ class SignupState extends Equatable with FormzMixin {
       cityMunicipalityPermanentStatus,
       barangayPermanentStatus,
       zipCodePermanentStatus,
+      bridgeStatus,
       status,
-      isValid,
     ];
   }
-  
-  @override
-  List<FormzInput> get inputs => [
-    lastName,
-    firstName,
-    middleName,
-    suffixName,
-    gender,
-    nationality,
-    birthAddress,
-    province,
-    cityMunicipality,
-    barangay,
-    zipCode,
-    provincePermanent,
-    cityMunicipalityPermanent,
-    barangayPermanent,
-    zipCodePermanent,
-    foreignPresentAddress,
-    foreignPermanentAddress,
-    password,
-    confirmPassword,
-  ];
 }

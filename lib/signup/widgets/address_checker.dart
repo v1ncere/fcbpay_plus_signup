@@ -17,7 +17,7 @@ class AddressChecker extends StatelessWidget {
               value: state.isSameAddress,
               onChanged: (value) => context.read<SignupBloc>().add(SameAddressChanged(value ?? false))
             ),
-            Text('Present address is same as permanent address.')
+            Text("Use present address as permanent address.")
           ]
         );
       }

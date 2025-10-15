@@ -34,28 +34,34 @@
 </head>
 <body>
   <script>
-    // Called by the web app (bridge.sendToHost)
-    // Host (native) should implement a WebView channel that routes to this,
-    // or this function will call window.FlutterBridge.postMessage when available.
+    // --- Web → Host communication ---
     window.sendToApp = function (payloadJson) {
-      // If embedded inside a mobile webview with a channel named "FlutterBridge", use it:
       try {
         if (window.FlutterBridge && typeof window.FlutterBridge.postMessage === 'function') {
           window.FlutterBridge.postMessage(payloadJson);
           return;
         }
-      } catch (error) { }
+      } catch (error) {}
 
-      // Otherwise log (useful during browser dev)
       console.log('sendToApp: no native bridge available, payload:', payloadJson);
     }
 
-    // Host → Web: host will call window.onSignupSaved(payloadJson)
+    // --- Host → Web communication ---
     window.onSignupSaved = function (payloadJson) {
-      // If the web app attaches a dart handler, it will be called by bridge.registerHostListener
-      // Otherwise, developers can observe window.onSignupSaved directly in JS.
       console.log('Host responded:', payloadJson);
     };
+
+    // --- Bridge ready handshake ---
+    window.addEventListener('flutter-first-frame', function () {
+      window.isBridgeReady = true;
+      try {
+        if (window.FlutterBridge && typeof window.FlutterBridge.postMessage === 'function') {
+          window.FlutterBridge.postMessage(JSON.stringify({ type: 'bridge_ready' }));
+        }
+      } catch (err) {
+        console.error('Bridge ready post failed:', err);
+      }
+    });
   </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>

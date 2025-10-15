@@ -25,6 +25,7 @@ class NationalityDropdown extends StatelessWidget {
             isExpanded: true,
             hint: Text("Select Nationality"),
             decoration: InputDecoration(
+              isDense: true,
               labelText: 'Nationality',
               labelStyle: const TextStyle(color: Colors.black54, fontWeight: FontWeight.w700),
               errorText: state.nationality.displayError?.text(),
