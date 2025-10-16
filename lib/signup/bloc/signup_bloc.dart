@@ -455,7 +455,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
       emit(state.copyWith(status: Status.initial));
       return;
     }
-
+    
     emit(state.copyWith(status: Status.loading));
 
     final payload = {
@@ -468,19 +468,18 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
         'gender': state.gender.value,
         'nationality': state.nationality.value,
         'birthAddress': state.birthAddress.value,
-        'province': state.province.value,
-        'cityMunicipality': state.cityMunicipality.value,
-        'barangay': state.barangay.value,
-        'zipCode': state.zipCode.value,
-        'provincePermanent': state.provincePermanent.value,
-        'cityMunicipalityPermanent': state.cityMunicipalityPermanent.value,
-        'barangayPermanent': state.barangayPermanent.value,
-        'zipCodePermanent': state.zipCodePermanent.value,
-        'foreignPresentAddress': state.foreignPresentAddress.value,
-        'foreignPermanentAddress': state.foreignPermanentAddress.value,
+        if (state.province.value != null) 'province': state.province.value,
+        if (state.cityMunicipality.value != null) 'cityMunicipality': state.cityMunicipality.value,
+        if (state.barangay.value != null) 'barangay': state.barangay.value,
+        if (state.zipCode.value.isNotEmpty) 'zipCode': state.zipCode.value,
+        if (state.provincePermanent.value != null) 'provincePermanent': state.provincePermanent.value,
+        if (state.cityMunicipalityPermanent.value != null) 'cityMunicipalityPermanent': state.cityMunicipalityPermanent.value,
+        if (state.barangayPermanent.value != null) 'barangayPermanent': state.barangayPermanent.value,
+        if (state.zipCodePermanent.value.isNotEmpty) 'zipCodePermanent': state.zipCodePermanent.value,
+        if (state.foreignPresentAddress.value != null) 'foreignPresentAddress': state.foreignPresentAddress.value,
+        if (state.foreignPermanentAddress.value != null) 'foreignPermanentAddress': state.foreignPermanentAddress.value,
         'password': state.password.value,
-        'confirmPassword': state.confirmPassword.value, 
-      } 
+      }
     };
     
     try {
