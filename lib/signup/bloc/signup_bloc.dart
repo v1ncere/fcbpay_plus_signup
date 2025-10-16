@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:formz/formz.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -226,7 +225,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     emit(state.copyWith(countryStatus: Status.loading));
     
     try {
-      final url = Uri.https(dotenv.get('COUNTRIES_HOST'), '/default/flutterNationalityCorsEnable');
+      final url = Uri.https('e9ltva0fy5.execute-api.ap-southeast-2.amazonaws.com', '/default/flutterNationalityCorsEnable');
       final response = await http.get(url);
       
       if (response.statusCode == 200) {
@@ -249,7 +248,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   Future<void> _onProvinceFetched(ProvinceFetched event, Emitter<SignupState> emit) async {
     emit(state.copyWith(provinceStatus: Status.loading));
     try {
-      final url = Uri.https(dotenv.get('ADDRESS_HOST'), '/api/provinces.json');
+      final url = Uri.https('psgc.gitlab.io', '/api/provinces.json');
       final response = await http.get(url);
       
       if (response.statusCode == 200) {
@@ -271,7 +270,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     
     try {
       if (event.provinceCode.isEmpty) {
-        final url = Uri.https(dotenv.get('ADDRESS_HOST'), '/api/cities-municipalities.json');
+        final url = Uri.https('psgc.gitlab.io', '/api/cities-municipalities.json');
         final response = await http.get(url);
         
         if (response.statusCode == 200) {
@@ -284,7 +283,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
           emit(state.copyWith(cityMunicipalityStatus: Status.failure, message: response.body));
         }
       } else {
-        final url = Uri.https(dotenv.get('ADDRESS_HOST'), '/api/provinces/${event.provinceCode}/cities-municipalities.json');
+        final url = Uri.https('psgc.gitlab.io', '/api/provinces/${event.provinceCode}/cities-municipalities.json');
         final response = await http.get(url);
         
         if (response.statusCode == 200) {
@@ -306,7 +305,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     
     try {
       if (event.municipalityCode.isEmpty) return;
-      final url = Uri.https(dotenv.get("ADDRESS_HOST"), '/api/cities-municipalities/${event.municipalityCode}/barangays.json');
+      final url = Uri.https('psgc.gitlab.io', '/api/cities-municipalities/${event.municipalityCode}/barangays.json');
       final response = await http.get(url);
       
       if (response.statusCode == 200) {
@@ -356,7 +355,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     
     try {
       if (event.provinceCode.isEmpty) {
-        final url = Uri.https(dotenv.get('ADDRESS_HOST'), '/api/cities-municipalities.json');
+        final url = Uri.https('psgc.gitlab.io', '/api/cities-municipalities.json');
         final response = await http.get(url);
         
         if (response.statusCode == 200) {
@@ -369,7 +368,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
           emit(state.copyWith(cityMunicipalityPermanentStatus: Status.failure, message: response.body));
         }
       } else {
-        final url = Uri.https(dotenv.get('ADDRESS_HOST'), '/api/provinces/${event.provinceCode}/cities-municipalities.json');
+        final url = Uri.https('psgc.gitlab.io', '/api/provinces/${event.provinceCode}/cities-municipalities.json');
         final response = await http.get(url);
         
         if (response.statusCode == 200) {
@@ -391,7 +390,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     
     try {
       if (event.municipalityCode.isEmpty) return;
-      final url = Uri.https(dotenv.get("ADDRESS_HOST"), '/api/cities-municipalities/${event.municipalityCode}/barangays.json');
+      final url = Uri.https('psgc.gitlab.io', '/api/cities-municipalities/${event.municipalityCode}/barangays.json');
       final response = await http.get(url);
       
       if (response.statusCode == 200) {

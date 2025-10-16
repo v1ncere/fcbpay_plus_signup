@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 import '../signup.dart';
@@ -9,8 +8,8 @@ class AWSLocationRepository {
 
   Future<List<PlaceSuggestion>> searchPlaces(String query) async {
     final url = Uri.https(
-      dotenv.get("AWS_LOCATION_API"),
-      dotenv.get("AWS_LOCATION_PATH"),
+      'yfvzibqi21.execute-api.ap-southeast-2.amazonaws.com',
+      '/default/fcbPayPlusPlaces',
       { "query": query }
     );
     final response = await http.get(url);
